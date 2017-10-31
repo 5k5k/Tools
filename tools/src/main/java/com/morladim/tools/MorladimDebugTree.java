@@ -24,6 +24,7 @@ public class MorladimDebugTree extends Timber.Tree {
     private String userTag;
 
     public MorladimDebugTree() {
+        Timber.d("test");
         userTag = "Morladim";
     }
 

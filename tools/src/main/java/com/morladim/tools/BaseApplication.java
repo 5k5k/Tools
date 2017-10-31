@@ -3,7 +3,6 @@ package com.morladim.tools;
 import android.app.Application;
 
 import com.facebook.stetho.Stetho;
-import com.squareup.leakcanary.LeakCanary;
 
 import timber.log.Timber;
 
@@ -14,7 +13,7 @@ import timber.log.Timber;
  * @author morladim
  */
 @SuppressWarnings("unused")
-public class BaseApplication extends Application {
+public abstract class BaseApplication extends Application {
 
     private static BaseApplication context;
 
@@ -25,20 +24,14 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            return;
-        }
-        LeakCanary.install(this);
-
         context = this;
-
         SharedPreferencesUtils.init(this);
         ImageLoader.init(this);
         NetworkUtils.init(this);
-        //chrome://inspect
-        Stetho.initializeWithDefaults(this);
 
         if (BuildConfig.DEBUG) {
+            //chrome://inspect 会在release时依然暴露数据库
+            Stetho.initializeWithDefaults(this);
             Timber.plant(new MorladimDebugTree());
         }
     }
